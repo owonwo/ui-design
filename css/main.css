@@ -52,7 +52,7 @@
   font-family: inherit;
   background: white;
   letter-spacing: 1px;
-  color: var(--orange);
+  color: #aaa;
 }
 
 .anim-btn span {

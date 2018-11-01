@@ -1,45 +1,52 @@
-let inputs = {}
-
-function setProgress(offset) {
-
-    let count = Object.keys(inputs).length,
-        value = offset / count,
-        filled = Object.values(inputs).filter(e => e).length;
-
-    return value === Infinity ? 0 : Math.abs((value * filled) - offset);
+const config = {
+    duration: 700,
+    activeClassName: 'active',
 }
 
-function animatePath() {
-    let 
-        btn = document.querySelector('.anim-btn');
-        svg = btn.querySelector('.anim-btn-path'),
-        offset = svg.getAttribute('stroke-dasharray'),
-        new_offset = setProgress(offset);
-        svg.style.strokeDashoffset = new_offset; 
+const Button = () => {
+    let btn = document.querySelector('.anim-btn'),
+        SVGPath = btn.querySelector('.anim-btn-path'),
+        offset = SVGPath.getAttribute('stroke-dasharray');
 
-    console.log(offset , new_offset);
-    setTimeout(function() {
-        if(0 === new_offset) {
-            btn.classList.add('active');    
-        }else {
-            btn.classList.remove('active');
+    return {
+        getStrokeOffset() {
+            return +SVGPath.getAttribute('stroke-dashoffset');
+        },
+        setProgress(progress = offset) {
+            console.trace(progress);
+            SVGPath.style.strokeDashoffset = progress;
+        },
+        active() {
+            btn.classList.add(config.activeClassName);
+        },
+        disable() {
+            btn.classList.remove(config.activeClassName);
         }
-    }, 700)
-}
-
-function isComplete() {
-    inputs[this.id] = (this.value.length > 0);
-    animatePath();
-}
-
-function getInputs() {
-    let lobb = document.querySelectorAll('input');
-    for(let input of lobb) {
-        inputs[input.id] = false,
-        input.addEventListener('keyup', isComplete);
     }
 }
 
+function getInputs() {
+    return document.querySelectorAll('form input');
+}
+
 window.addEventListener('load', () => {
-    getInputs();
+    let inputs = [].slice.call(getInputs()),
+        remains = 0;
+        btn = Button();
+
+    const filled = () => inputs.filter(input => input.value.length > 0).length;
+    const isCompleted = () => inputs.length === filled();
+    const progress = () => {
+        let offset = btn.getStrokeOffset();
+        let count = inputs.length,
+            value = offset / count;
+        
+        return value === Infinity ? 0 : Math.abs( (value * filled()) - offset);
+    }
+    const validateInputs = () => {
+        btn.setProgress(progress());
+        isCompleted() ? setTimeout(() => btn.active(), config.duration) : btn.disable();
+    }
+
+    inputs.map(e => e.addEventListener('keyup', validateInputs));
 })
