@@ -30,9 +30,23 @@ function getInputs() {
 }
 
 window.addEventListener('load', () => {
+    buildCartQuantity();
+    buildSVGProgress();
+})
+
+function buildCartQuantity() {
+    let button = document.querySelector('#inc-holder');
+    if(!button) return ;
+    button.addEventListener('click', () => {
+        button.classList.toggle('is-set');
+    });
+}
+
+function buildSVGProgress() {
     let inputs = [].slice.call(getInputs()),
         remains = 0;
-        btn = Button();
+    if (inputs.length < 1) return;
+    btn = Button();
 
     const filled = () => inputs.filter(input => input.value.length > 0).length;
     const isCompleted = () => inputs.length === filled();
@@ -40,8 +54,8 @@ window.addEventListener('load', () => {
         let offset = btn.getStrokeOffset();
         let count = inputs.length,
             value = offset / count;
-        
-        return value === Infinity ? 0 : Math.abs( (value * filled()) - offset);
+
+        return value === Infinity ? 0 : Math.abs((value * filled()) - offset);
     }
     const validateInputs = () => {
         btn.setProgress(progress());
@@ -49,4 +63,4 @@ window.addEventListener('load', () => {
     }
 
     inputs.map(e => e.addEventListener('keyup', validateInputs));
-})
+}
