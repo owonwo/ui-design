@@ -15,7 +15,6 @@ const Button = () => {
             return +SVGPath.getAttribute('stroke-dashoffset');
         },
         setProgress(progress = offset) {
-            console.trace(progress);
             SVGPath.style.strokeDashoffset = progress;
         },
         active() {
@@ -31,19 +30,51 @@ function getInputs() {
     return document.querySelectorAll('form input');
 }
 
+const buildCartQuantity = () => {
+    let quantity = 0;
+    const button = document.querySelector('#inc-holder');
+    if(!button) return false;
+
+    let plusButton = button.querySelector('#plus'),
+        minusButton = button.querySelector('#minus')
+        quantityCounter = button.querySelector('#quantity');
+
+    return {
+        quantityIsZero() {
+            return quantity === 0;
+        },
+        increment: () => quantity++,
+        decrement: () => !(quantity > 0) || quantity--,
+        init() {
+            button.addEventListener('click', () => {
+                if(!this.quantityIsZero() && quantity > 0) {
+                    button.classList.add('is-set')
+                }else{
+                    button.classList.remove('is-set');
+                }
+            });
+            plusButton.addEventListener('click',(e) => {
+                this.increment();
+                this.updateQuantity()
+            })
+            minusButton.addEventListener('click',(e) => {
+                this.decrement();
+                this.updateQuantity();
+            })
+        },
+        updateQuantity() {
+            quantityCounter.innerText = quantity;
+        }
+    }
+}
+
 window.addEventListener('load', () => {
-    buildCartQuantity();
     Unveil.init(2);
+    const bigButton = buildCartQuantity();
+    if(bigButton) bigButton.init();
     buildSVGProgress();
 })
 
-function buildCartQuantity() {
-    let button = document.querySelector('#inc-holder');
-    if(!button) return ;
-    button.addEventListener('click', () => {
-        button.classList.toggle('is-set');
-    });
-}
 
 function buildSVGProgress() {
     let inputs = [].slice.call(getInputs()),
