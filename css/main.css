@@ -101,6 +101,42 @@
   width: 100%;
   line-height: 30px;
 }
+/* UNVIEL */
+.wg-window {
+  /* background: gray; */
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.wg-window > .holder {
+  border: solid 2px black;
+  position: absolute;
+  z-index: -1;
+  top: 0 ; left: 0; right: 0; bottom: 0;
+  background-image:  linear-gradient(orchid, purple);
+}
+
+.wg-window .holder > div {
+  transform: rotateX(0deg);
+  transition: transform .3s ease-out; 
+}
+
+.wg-window > button {
+  background: transparent;
+  letter-spacing: 4px;
+  font-size: larger;
+  font-family: 'Dosis';
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.248);
+  padding: 15px 30px;
+  border-radius: 12px;
+  color: white;
+  border: none;
+}
+
+/* END UNVIEL */
 
 /* CART QUANTITY */
 #inc-holder {

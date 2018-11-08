@@ -3,6 +3,8 @@ const config = {
     activeClassName: 'active',
 }
 
+const _ = (selector) => document.querySelector(selector);
+
 const Button = () => {
     let btn = document.querySelector('.anim-btn'),
         SVGPath = btn.querySelector('.anim-btn-path'),
@@ -31,6 +33,7 @@ function getInputs() {
 
 window.addEventListener('load', () => {
     buildCartQuantity();
+    Unveil.init(2);
     buildSVGProgress();
 })
 
@@ -63,4 +66,67 @@ function buildSVGProgress() {
     }
 
     inputs.map(e => e.addEventListener('keyup', validateInputs));
+}
+
+
+const Unveil = {
+    shutters: [],
+    init(count) {
+        count = count || 5;
+        const mainEl = _('.wg-window'),
+            holder = mainEl.querySelector('.holder'),
+            button = mainEl.querySelector('button');
+        if(!mainEl) return false;
+        holder.height = holder.clientHeight;
+
+        this.shutters = this.addShutters(count, holder);
+        console.log(this.shutters);
+        this.addButton(button);
+    },
+    addButton(button) {
+        button.addEventListener('click', this.flipShutters.bind(this));
+    },
+    flipShutters() {
+        // console.log(this.shutters);
+        this.shutters.map((el) => el.initFlip());
+    },
+    addShutters(count, holder) {
+        return Array(count).fill("").map((e) => {
+                const div = this.addElementPrototype(document.createElement('div'));
+                const calculateHeight = () => {
+                    return Math.abs((holder.height / count)) + 'px'
+                }
+                div.css({
+                    backgroundColor: 'blue',
+                    height: calculateHeight()
+                }).setup();
+                holder.appendChild(div);
+                return div;
+            })
+    },
+    addElementPrototype(el) {
+        let clockwise = false;
+        
+        el.__proto__ = Object.assign(el.__proto__, {
+            setup(value) {
+                clockwise = !clockwise
+            },
+            css(obj) {
+                Object.entries(obj).map(([key, value]) =>  {
+                    this.style[key] = value;
+                });
+                return this;
+            },
+            initFlip() {
+                (clockwise) ? this.flip(true) : this.flip(false);
+            },
+            flip(clockwise) {
+                this.css({
+                    transform: clockwise ? 'rotateX(90deg)' : 'rotateX(-90deg)'
+                });
+            },
+        });
+
+        return el;
+    }
 }
