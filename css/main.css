@@ -105,23 +105,39 @@
 .wg-window {
   /* background: gray; */
   height: 100vh;
+  position: relative;
   width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
+  background-image:  linear-gradient(orchid, purple);
+}
+
+.wg-window:nth-child(2) {
+  background-image:  linear-gradient( lightblue, dodgerblue);
 }
 
 .wg-window > .holder {
-  border: solid 2px black;
+  z-index: 2;
+  overflow: hidden;
   position: absolute;
-  z-index: -1;
+  perspective: 400px;
   top: 0 ; left: 0; right: 0; bottom: 0;
-  background-image:  linear-gradient(orchid, purple);
 }
 
 .wg-window .holder > div {
   transform: rotateX(0deg);
-  transition: transform .3s ease-out; 
+  transform-style: preserve-3d;
+  transition: transform .3s ease-out;
+  background-image: linear-gradient(0deg, rgb(150, 75, 22), rgb(240, 140, 69));
+}
+
+@keyframes one-side-fall {
+  0% { transform: translateY(0vh) rotate(0deg); opacity: 1; }
+  5% { transform: rotate(12deg) }
+  10% { transform: rotate(30deg) }
+  15% { transform: rotate(35deg) }
+  50% { transform: translateY(100vh); opacity: 0; }
 }
 
 .wg-window > button {
@@ -134,8 +150,13 @@
   border-radius: 12px;
   color: white;
   border: none;
+  transform: translate(0,0,0);
+  transform-origin: top left;
 }
 
+.one-side-fall {
+  animation: one-side-fall 1.2s 1 forwards linear;
+}
 /* END UNVIEL */
 
 /* CART QUANTITY */

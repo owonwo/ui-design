@@ -69,7 +69,7 @@ const buildCartQuantity = () => {
 }
 
 window.addEventListener('load', () => {
-    Unveil.init(2);
+    Unveil.init(10);
     const bigButton = buildCartQuantity();
     if(bigButton) bigButton.init();
     buildSVGProgress();
@@ -104,31 +104,46 @@ const Unveil = {
     shutters: [],
     init(count) {
         count = count || 5;
-        const mainEl = _('.wg-window'),
+        const mainEl = _('.wg-window:nth-child(2)'),
             holder = mainEl.querySelector('.holder'),
             button = mainEl.querySelector('button');
         if(!mainEl) return false;
         holder.height = holder.clientHeight;
-
         this.shutters = this.addShutters(count, holder);
-        console.log(this.shutters);
+        this.shutters.forEach(e => {
+            this.observer.observe(e);
+        })
         this.addButton(button);
     },
+    observer: (function() {
+        return new IntersectionObserver((entries) => {
+            entries.map((entry) => {
+                if (entry.intersectionRatio > 0) {
+                    entry.target.initFlip();
+                } else {
+                    entry.target.style.transform = "";
+                }
+            })
+        })
+    })(),
     addButton(button) {
-        button.addEventListener('click', this.flipShutters.bind(this));
+        button.addEventListener('click', () => {
+            this.flipShutters()
+            button.classList.add('one-side-fall')
+            setTimeout(() => button.style.opacity = 0, 800);
+        });
     },
     flipShutters() {
         // console.log(this.shutters);
         this.shutters.map((el) => el.initFlip());
     },
     addShutters(count, holder) {
-        return Array(count).fill("").map((e) => {
+        return Array(count).fill("").map((e, index) => {
                 const div = this.addElementPrototype(document.createElement('div'));
                 const calculateHeight = () => {
                     return Math.abs((holder.height / count)) + 'px'
                 }
                 div.css({
-                    backgroundColor: 'blue',
                     height: calculateHeight()
                 }).setup();
                 holder.appendChild(div);
