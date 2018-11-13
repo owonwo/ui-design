@@ -71,7 +71,7 @@ const buildCartQuantity = () => {
 window.addEventListener('load', () => {
     Unveil.init(10);
     const bigButton = buildCartQuantity();
-        bigButton.init();
+    if(bigButton) bigButton.init();
     buildSVGProgress();
 })
 
