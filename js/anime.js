@@ -71,7 +71,7 @@ const buildCartQuantity = () => {
 window.addEventListener('load', () => {
     Unveil.init(10);
     const bigButton = buildCartQuantity();
-    if(bigButton) bigButton.init();
+        bigButton.init();
     buildSVGProgress();
 })
 
@@ -104,10 +104,12 @@ const Unveil = {
     shutters: [],
     init(count) {
         count = count || 5;
-        const mainEl = _('.wg-window:nth-child(2)'),
-            holder = mainEl.querySelector('.holder'),
-            button = mainEl.querySelector('button');
+        const mainEl = _('.wg-window:nth-child(2)');
         if(!mainEl) return false;
+
+        const holder = mainEl.querySelector('.holder'),
+            button = mainEl.querySelector('button');
+
         holder.height = holder.clientHeight;
         this.shutters = this.addShutters(count, holder);
         this.shutters.forEach(e => {
