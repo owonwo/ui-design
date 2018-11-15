@@ -3,6 +3,17 @@ const config = {
     activeClassName: 'active',
 }
 
+const pipe = (...fns) => x => fns.reduce((v, f) => f(v), x);
+
+const trace = (x) => {
+    console.log(x);
+    return x;
+}
+
+const logErr = (err) => {
+    err => console.warn("Validation Failed!", err);
+}
+
 const _ = (selector) => document.querySelector(selector);
 
 const Button = () => {
@@ -74,7 +85,6 @@ window.addEventListener('load', () => {
     if(bigButton) bigButton.init();
     buildSVGProgress();
 })
-
 
 function buildSVGProgress() {
     let inputs = [].slice.call(getInputs()),
@@ -176,5 +186,179 @@ const Unveil = {
         });
 
         return el;
+    }
+}
+
+const Identity = (x) => {
+    return {
+        map: (fun) => {
+            return Identity(fun(x))
+        },
+        bounceOut: () => {
+            x.style.left = 0;
+            return Identity(x);
+        }
+    }
+}
+
+
+const hideIcon = (el) => {
+    setTimeout(() => el.style.visibility = "hidden", 300);
+    return el;
+}
+
+const bounceOut = (el) => {
+    el.style.left = 0;
+    el.style.borderColor = '#FFFFFF';
+    return el;
+}
+
+
+const IconHolder = () => {
+    let left = 0;
+    const holder = document.querySelector('.wg-ss__icon_holder');
+    let icons = [].slice.call(holder.children).map(x => Identity(x));
+
+    return {
+        init() {
+            console.time('ICONS TIME')
+            icons.map((e, index) => {
+                e.map((x) => {
+                    x.style.left = `${left}px`
+                    if(index > 0) 
+                        x.style.borderColor = `#777777`
+                    left += 5;
+                });
+                return e;
+            }).reverse().map((e, key) => {
+                e.map(x => x.style.zIndex = key);
+            });
+            console.timeEnd('ICONS TIME')
+        },
+        fetchIcon(index) {
+            if(typeof index === 'number') {
+                return icons[+index];
+            } else {
+                throw Error('invalid index arguemnt, excepted a Number got '+ typeof index)
+            }
+        }
+    }
+}
+
+const SS = () => {
+    const ssInput = document.querySelector('.wg-ss__input'),
+        span = document.querySelector('#enter'),
+        input = document.createElement('input');
+        icon = ssInput.querySelector('.wg-ss__icon'),
+        label = ssInput.querySelector('.wg-ss__text_holder > label'),
+        submitButton = ssInput.querySelector('.wg-ss__submit'),
+        iconHolder = IconHolder();
+        fields = {
+            "full name": {value: '', regexp: /.+/}, 
+            email: {value:'', regexp: /^.+@.+\..+$/},
+            password: {value: '', regexp: /[A-z0-9_-]+/},
+        };
+    let counter = 0;
+    /**
+     * @return String
+     */
+    const current = () => Object.keys(fields)[counter];
+    const getRegExp = () =>  {
+        const input = fields[current()];
+        return input.regexp.test(input.value);
+    }
+    const isFinished = () => counter > (Object.keys(fields).length - 1);
+    window.isFinished = isFinished;
+
+    const changeLabel = () => {
+        label.innerText = current();
+    }
+    const makeDots = () => '<span class="dots"></span>';
+
+    return {
+        init() {
+            changeLabel();
+            ssInput.appendChild(input);
+            iconHolder.init();
+
+            ssInput.addEventListener('click', ( ) => {
+                input.focus();
+                input.addEventListener('keyup', (event) => {
+                    if(event.keyCode === 13) {
+                        this.send.bind(this)()
+                        return
+                    }
+
+                    const currentField = fields[current()];
+
+                    if(current() === 'password') {
+                        currentField.value = [].slice.call(input.value).join('');
+                        span.innerHTML = currentField.value.split("").map(makeDots).join('');
+                    } else {
+                        span.innerText = currentField.value = [].slice.call(input.value).join('');
+                    }
+                });
+            });
+            submitButton.addEventListener('click', this.send.bind(this));
+        },
+        send() {
+            const slideRight = (el) => {
+                const offset = Math.abs(ssInput.clientWidth);
+                el.style.transform = `translateX(${offset}px) rotate(-16deg)`;
+                return el;
+            }
+
+            const shakeButton = () => {
+                ssInput.classList.add('wiggle')
+                submitButton.classList.add('shake')
+
+                setTimeout(() => {
+                    ssInput.classList.remove('wiggle')
+                    submitButton.classList.remove('shake');
+                }, 600);
+            }
+
+            const submit = () => {
+                if (!isFinished()) {
+                    counter += 1;
+                    changeLabel();
+                }
+
+                console.log(current(), counter);
+                console.log('called!');
+            }
+
+            const clearText = () => {
+                setTimeout(() => {
+                    input.value = ""
+                    span.innerText = ""
+                }, 150);
+            }
+
+            this.validate()
+                .then(() => {
+                    if (!isFinished()) {
+                        iconHolder.fetchIcon(counter)
+                         .map(slideRight)
+                         .map(hideIcon)
+                        
+                        setTimeout(() => {
+                            iconHolder.fetchIcon(counter).map(bounceOut);
+                        }, 300);
+                    }
+                })
+                .then(clearText).then(submit)
+                .catch(err => {
+                    shakeButton();
+                    console.log(err);
+                })
+        },
+        fields() {
+            return fields;
+        },
+        async validate() {
+            if (getRegExp()) return "";
+            throw Error('Validation Failed!'); 
+        }
     }
 }

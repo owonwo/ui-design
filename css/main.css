@@ -1,6 +1,7 @@
 :root {
   --orange: orange;
   --light-gray: #ddd;
+  --wg-ss-background: #1f1f1f;
 }
 
 .form-style-3 input.form-control {
@@ -256,6 +257,9 @@ button {
   position: absolute;
   background: rgb(75, 75, 214);
 }
+/* CART QUANTITY END  */
+
+
 
 /* CART QUANTITY END  */
 button.no-style, button[ghost] {
@@ -3113,6 +3117,10 @@ body {
   font-weight: 400;
   background-color: orange;
   font-family: "Dosis", "Ubuntu", sans-serif;
+}
+
+body.ss {
+  background: #1f1f1f;
 }
 
 * {
