@@ -6,10 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>About You Form</title>
-    <!-- <link href="https://fonts.googleapis.com/css?family=Dosis:500" rel="stylesheet"> -->
+    <link href="https://fonts.googleapis.com/css?family=Raleway:500" rel="stylesheet">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/materialdesignicons.min.css">
     <script src="js/anime.js"></script>
+    <style>
+        body {
+            font-family: 'Raleway';
+        }
+    </style>
 </head>
 
 <body class="ss">
@@ -32,164 +37,16 @@
                     <button class="wg-ss__submit mdi mdi-chevron-right mdi-24px mdi-light">
                     </button>
                 </span>
+                <div class="wg-ss__finished">Thanks</div>
             </div>
         </section>
     </main>
     <script>
-        const input = SS()
-        input.init();
+        SS().init().on('error', function(err) {
+                console.log(err)})
+            .on('complete', (payload) => 
+                console.log(payload));
     </script>
-    <style> 
-    /* SINGLE SIGNUP */
-        .wg-ss__input {
-            height: 60px;
-            position: relative;
-            letter-spacing: 1px;
-            overflow: hidden;
-            min-width: 200px;
-            border-radius: 50px;
-            border: solid 1px white;
-            display: flex;
-            align-items: center;
-            box-sizing: border-box;
-            animation-delay: 300ms;
-        }
-
-        .wg-ss__input > input {
-            width: 0.1px;
-            height: 0.1px;
-            opacity: 0;
-        }
-
-        .wg-ss__holder {
-            width: 100%;
-            padding-right: 50px;
-            display: flex;
-            align-items: center;
-        }
-
-        .wg-ss__icon_holder {
-            background: green;
-            width: 60px;
-        }
-
-        .wg-ss__icon_holder > .wg-ss__icon {
-            position: absolute !important;
-            top: 0; 
-            left: 0;
-            z-index: 0;
-        }
-
-        .wg-ss__icon {
-            width: 60px;
-            height: 60px;
-            margin-left: -2px;
-            z-index: 4;
-            display: block;
-            box-sizing: border-box;
-            text-align: center;
-            flex: 0 0 60px;
-            line-height: 60px;
-            border-radius: 40px;
-            border: solid 1px white;
-            background-color: var(--wg-ss-background, black);
-            transition: all .3s cubic-bezier(0.7, 0.1, 0.27, 0.99);
-        }
-
-        .wg-ss__text_holder {
-            min-width: 100px;
-        }
-
-        .wg-ss__text_holder #enter ,
-        .wg-ss__text_holder input {
-            border: none;
-            height: 30px;
-            color: white;
-            font-size: 1.2rem;
-            background-color: transparent;
-        }
-
-        .wg-ss__text_holder #enter {
-            margin-left: 10px;
-        }
-        .wg-ss__text_holder #enter .dots {
-            width: 15px;
-            height: 15px;
-            background: white;
-            display: inline-block;
-            margin-right: 3px;
-            border-radius: 50px;
-        }
-
-        .wg-ss__text_holder input {
-            width: 1px;
-        }
-
-        .wg-ss__text_holder input:focus {
-            outline: none !important;
-        }
-
-        .wg-ss__text_holder label {
-            opacity: 0.4;
-            display: block;
-            color: white;
-            text-transform: capitalize;
-            font-size: 0.8rem;
-            text-indent: 10px;
-            margin-top: -5px;
-        }
-
-        .wg-ss__submit {
-            width: 35px;
-            height: 35px;
-            margin: 0 10px 0 0px;
-            flex: 0 0 35px;
-            border: none;
-            display: block;
-            box-sizing: border-box;
-            text-align: center;
-            position: absolute;
-            right: 0;
-            line-height: 1.5;
-            border-radius: 40px;
-            background-color: #2a2a2a;
-            transition: .3s;
-            animation-delay: 300ms;
-        }
-
-        .wg-ss__submit:focus {
-            transform: scale(0.8);
-        }
-
-        .shake {
-            animation-name: hr-shaking;
-            animation-iteration-count:  1;
-            animation-duration: 300ms;
-            animation-timing-function: ease-out;
-        }
-
-        .wiggle {
-            animation-name: wiggle;
-            animation-iteration-count:  1;
-            animation-duration: 300ms;
-            animation-timing-function: cubic-bezier(0.01, 0.14, 0.56, 1.74);
-        }
-
-        @keyframes hr-shaking {
-            0% { transform: rotate(0) }
-            50% { transform: rotate(-35deg) }
-            100% { transform: rotate(0deg) }
-        }
-
-        @keyframes wiggle {
-            0% { transform: translateX(0) }
-            25% { transform: translateX(-15px) }
-            50% { transform: translateX(0px) }
-            75% { transform: translateX(15px) }
-            100% { transform: translateX(0) }
-        }
-        /* END SINGLE SIGNUP */
-    </style>
 </body>
 
 </html>

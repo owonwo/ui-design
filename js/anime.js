@@ -5,6 +5,8 @@ const config = {
 
 const pipe = (...fns) => x => fns.reduce((v, f) => f(v), x);
 
+const delay = (time) => (result) => new Promise(resolve => setTimeout(() => resolve(result), time));
+
 const trace = (x) => {
     console.log(x);
     return x;
@@ -84,7 +86,7 @@ window.addEventListener('load', () => {
     const bigButton = buildCartQuantity();
     if(bigButton) bigButton.init();
     buildSVGProgress();
-})
+});
 
 function buildSVGProgress() {
     let inputs = [].slice.call(getInputs()),
@@ -108,7 +110,6 @@ function buildSVGProgress() {
 
     inputs.map(e => e.addEventListener('keyup', validateInputs));
 }
-
 
 const Unveil = {
     shutters: [],
@@ -146,7 +147,6 @@ const Unveil = {
         });
     },
     flipShutters() {
-        // console.log(this.shutters);
         this.shutters.map((el) => el.initFlip());
     },
     addShutters(count, holder) {
@@ -194,6 +194,10 @@ const Identity = (x) => {
         map: (fun) => {
             return Identity(fun(x))
         },
+        delay: async (duration) => {
+            await delay(duration)();
+            return Identity(x)
+        },
         bounceOut: () => {
             x.style.left = 0;
             return Identity(x);
@@ -201,18 +205,23 @@ const Identity = (x) => {
     }
 }
 
-
-const hideIcon = (el) => {
-    setTimeout(() => el.style.visibility = "hidden", 300);
-    return el;
-}
-
-const bounceOut = (el) => {
-    el.style.left = 0;
-    el.style.borderColor = '#FFFFFF';
-    return el;
-}
-
+const IconAnimation = Object.freeze({
+    hide: (el) => {
+        el.style.visibility = "hidden"
+        return el;
+    },
+    bounceOut: (el) => {
+        el.style.left = 0;
+        el.style.borderColor = '#FFFFFF';
+        el.style.opacity = 1;
+        return el;
+    },
+    slideRight: (offset) => (el) => {
+        el.style.transform = `translateX(${offset}px) rotateY(180deg)`;
+        el.style.opacity = 0;
+        return el;
+    }
+});
 
 const IconHolder = () => {
     let left = 0;
@@ -221,19 +230,21 @@ const IconHolder = () => {
 
     return {
         init() {
-            console.time('ICONS TIME')
             icons.map((e, index) => {
                 e.map((x) => {
                     x.style.left = `${left}px`
-                    if(index > 0) 
-                        x.style.borderColor = `#777777`
+                    if(index > 0) {
+                        x.style.borderColor = `#FFFFFF`
+                        x.style.opacity = '0.1'
+                    }
                     left += 5;
                 });
                 return e;
-            }).reverse().map((e, key) => {
-                e.map(x => x.style.zIndex = key);
+            }).reverse().map((e, index) => {
+                e.map(x => {
+                    x.style.zIndex = index
+                })
             });
-            console.timeEnd('ICONS TIME')
         },
         fetchIcon(index) {
             if(typeof index === 'number') {
@@ -243,6 +254,12 @@ const IconHolder = () => {
             }
         }
     }
+}
+
+function FormError (message, code) {
+    this.message = message
+    this.code = code
+    this.name = "Form Error"
 }
 
 const SS = () => {
@@ -259,106 +276,149 @@ const SS = () => {
             password: {value: '', regexp: /[A-z0-9_-]+/},
         };
     let counter = 0;
-    /**
-     * @return String
-     */
+    const EVENTS = {};
+    const getOffset = () => Math.abs(ssInput.clientWidth);
     const current = () => Object.keys(fields)[counter];
     const getRegExp = () =>  {
         const input = fields[current()];
         return input.regexp.test(input.value);
     }
     const isFinished = () => counter > (Object.keys(fields).length - 1);
-    window.isFinished = isFinished;
-
-    const changeLabel = () => {
-        label.innerText = current();
-    }
+    const changeLabel = () => label.innerText = current();
+    const hideLabel = () => label.style.display = 'none';
     const makeDots = () => '<span class="dots"></span>';
+    const updateWidth = (width) => {
+        let holder = document.querySelector('.wg-ss__text_holder');
+        ssInput.style.width = typeof width !== 'undefined' ? width : `${(holder.clientWidth + 100)}px`;
+    }
+   
+    const shakeButton = () => {
+        ssInput.classList.add('wiggle')
+        submitButton.classList.add('shake')
+
+        setTimeout(() => {
+            ssInput.classList.remove('wiggle')
+            submitButton.classList.remove('shake');
+        }, 600);
+    }
+
+    const animateCurrentIcon = () => {
+        iconHolder
+            .fetchIcon(counter)
+            .map(IconAnimation.slideRight(getOffset()))
+            .delay(1000).then((icon) => {
+                icon.map(IconAnimation.hide).delay(300)
+                    .then(icon => icon.map(resizeInput))
+            });
+    }
+    const animateNexIcon = () => {
+        const next = counter
+        isFinished() ||
+            iconHolder.fetchIcon(next).delay(300)
+                .then(icon => icon.map(IconAnimation.bounceOut));
+    }
+
+    const submit = () => {
+        if (!isFinished()) {
+            animateCurrentIcon();
+            (counter += 1)
+            animateNexIcon();
+        }
+        if (isFinished())
+            throw new FormError('Field fields Finished!', 54);
+    }
+
+    const resizeInput = () => {
+        updateWidth();
+        Promise.resolve().then(delay(1000))
+            .then(() => updateWidth('auto'))
+    }
+
+    const clearText = () => {
+        input.value = ""
+        span.innerText = ""
+    }
+    const playFinalAnimation = () => {
+        clearText();
+        resizeInput();
+        hideLabel();
+    }
 
     return {
         init() {
             changeLabel();
-            ssInput.appendChild(input);
             iconHolder.init();
+            ssInput.appendChild(input);
 
-            ssInput.addEventListener('click', ( ) => {
-                input.focus();
-                input.addEventListener('keyup', (event) => {
-                    if(event.keyCode === 13) {
-                        this.send.bind(this)()
-                        return
-                    }
-
-                    const currentField = fields[current()];
-
-                    if(current() === 'password') {
-                        currentField.value = [].slice.call(input.value).join('');
-                        span.innerHTML = currentField.value.split("").map(makeDots).join('');
-                    } else {
-                        span.innerText = currentField.value = [].slice.call(input.value).join('');
-                    }
-                });
-            });
+            ssInput.addEventListener('click', this.focusIn.bind(this));
             submitButton.addEventListener('click', this.send.bind(this));
+            input.addEventListener('blur', () => ssInput.classList.remove('focused'))
+            return this;
+        },
+        focusIn() {
+            input.focus();
+            ssInput.classList.add('focused');
+            input.addEventListener('keyup', this.typeIn.bind(this));
+        },
+        typeIn(event) {
+            if (event.keyCode === 13) {
+                this.send.bind(this)()
+                return;
+            }
+            const currentField = fields[current()];
+
+            if (current() === 'password') {
+                currentField.value = [].slice.call(input.value).join('');
+                span.innerHTML = currentField.value.split("").map(makeDots).join('');
+            } else {
+                span.innerHTML = currentField.value = [].slice.call(input.value).join('').replace(' ', '&nbsp;');
+            }
+            updateWidth()
         },
         send() {
-            const slideRight = (el) => {
-                const offset = Math.abs(ssInput.clientWidth);
-                el.style.transform = `translateX(${offset}px) rotate(-16deg)`;
-                return el;
-            }
-
-            const shakeButton = () => {
-                ssInput.classList.add('wiggle')
-                submitButton.classList.add('shake')
-
-                setTimeout(() => {
-                    ssInput.classList.remove('wiggle')
-                    submitButton.classList.remove('shake');
-                }, 600);
-            }
-
-            const submit = () => {
-                if (!isFinished()) {
-                    counter += 1;
-                    changeLabel();
-                }
-
-                console.log(current(), counter);
-                console.log('called!');
-            }
-
-            const clearText = () => {
-                setTimeout(() => {
-                    input.value = ""
-                    span.innerText = ""
-                }, 150);
-            }
-
+            (isFinished()) ||
             this.validate()
-                .then(() => {
-                    if (!isFinished()) {
-                        iconHolder.fetchIcon(counter)
-                         .map(slideRight)
-                         .map(hideIcon)
-                        
-                        setTimeout(() => {
-                            iconHolder.fetchIcon(counter).map(bounceOut);
-                        }, 300);
-                    }
-                })
-                .then(clearText).then(submit)
+                .then(submit)
+                .then(delay(120))
+                .then(changeLabel)
+                .then(clearText)
                 .catch(err => {
-                    shakeButton();
-                    console.log(err);
-                })
-        },
-        fields() {
-            return fields;
+                    if(err.code === 54) {
+                        this.destruct();
+                    }else {
+                        shakeButton();
+                    }
+                    this.fireEvent('error', err);
+                });
         },
         async validate() {
             if (getRegExp()) return "";
-            throw Error('Validation Failed!'); 
+            throw Error('Validation Failed for field: ' + current()); 
+        },
+        on(action, callback) {
+            EVENTS[action] = callback;
+            return this;    
+        },
+        fireEvent(eventname, ...args) {
+            if(Object.keys(EVENTS).includes(eventname))
+            switch(eventname) {
+                case "complete":
+                    args = [fields];
+                default:
+                EVENTS[eventname].apply(this, [...args]);
+            }
+        },
+        destruct() {
+            Promise.resolve().then(playFinalAnimation).then(delay(300))
+            .then(() => {
+                ssInput.classList.remove('focused');
+                ssInput.classList.add('finished')
+            });
+            ssInput.removeEventListener('click', this.focusIn.bind(this))
+            submitButton.removeEventListener('click', this.send.bind(this))
+            input.outerHTML = ""
+            submitButton.outerHTML = ""
+            this.fireEvent('complete');
         }
     }
 }
