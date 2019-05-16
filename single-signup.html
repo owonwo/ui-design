@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>About You Form</title>
+    <link href="https://fonts.googleapis.com/css?family=Raleway:500" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/materialdesignicons.min.css">
+    <script src="js/anime.js"></script>
+    <style>
+        body {
+            font-family: 'Raleway';
+        }
+    </style>
+</head>
+
+<body class="ss">
+    <main id="main-body">
+        <section>
+            <div class="wg-ss__input">
+                <span class="wg-ss__holder">
+                    <div class="wg-ss__icon_holder">
+                        <span class="wg-ss__icon mdi mdi-account mdi-24px mdi-light">
+                        </span>
+                        <span class="wg-ss__icon mdi mdi-email mdi-24px mdi-light">
+                        </span>
+                        <span class="wg-ss__icon mdi mdi-lock mdi-24px mdi-light">
+                        </span>
+                    </div>
+                    <div class="wg-ss__text_holder">
+                        <label for="">Email</label>
+                        <span id="enter"></span>
+                    </div>
+                    <button class="wg-ss__submit mdi mdi-chevron-right mdi-24px mdi-light">
+                    </button>
+                </span>
+                <div class="wg-ss__finished">Thanks</div>
+            </div>
+        </section>
+    </main>
+    <script>
+        SS().init().on('error', function(err) {
+                console.log(err)})
+            .on('complete', (payload) => 
+                console.log(payload));
+    </script>
+</body>
+
+</html>
