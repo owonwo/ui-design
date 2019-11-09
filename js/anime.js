@@ -272,6 +272,7 @@ const SS = () => {
         iconHolder = IconHolder();
         fields = {
             "full name": {value: '', regexp: /.+/}, 
+            "age": { value: '', regexp: /.+/ },
             email: {value:'', regexp: /^.+@.+\..+$/},
             password: {value: '', regexp: /[A-z0-9_-]+/},
         };
@@ -346,6 +347,8 @@ const SS = () => {
 
     return {
         init() {
+            debugger
+
             changeLabel();
             iconHolder.init();
             ssInput.appendChild(input);

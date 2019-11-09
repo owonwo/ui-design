@@ -1,0 +1,47 @@
+$navbar-height: 10vh;
+
+body {
+    --primary-color: blue;
+    --border-color: #e8e8e8;
+    margin: 0;
+    overflow: hidden;
+    // background: blue;
+    font-family: Avenir;
+    font-size: 14px;
+}
+
+* {
+    // all: revert !important;
+}
+
+%wireframe {
+    > *:not(:last-child) {
+        border-right: solid 1px var(--border-color);
+    }
+}
+
+.ax_ {
+    &header {
+        @extend %wireframe;
+
+        display: grid;
+        grid-template-rows: $navbar-height;
+        grid-template-columns: repeat(4, 1fr);
+        border-bottom: solid 1px var(--border-color);
+
+        > *:not(:first-child) {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+
+    &main {
+        @extend %wireframe;
+
+        height: 100vh - $navbar-height;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+
+    }
+}

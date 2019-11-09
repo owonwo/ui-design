@@ -1,0 +1,31 @@
+body {
+  --primary-color: blue;
+  --border-color: #e8e8e8;
+  margin: 0;
+  overflow: hidden;
+  font-family: Avenir;
+  font-size: 14px;
+}
+
+.ax_main > *:not(:last-child), .ax_header > *:not(:last-child) {
+  border-right: solid 1px var(--border-color);
+}
+
+.ax_header {
+  display: grid;
+  grid-template-rows: 10vh;
+  grid-template-columns: repeat(4, 1fr);
+  border-bottom: solid 1px var(--border-color);
+}
+.ax_header > *:not(:first-child) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ax_main {
+  height: 90vh;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/*# sourceMappingURL=product-gallery.css.map */
