@@ -2,11 +2,12 @@ body {
   --primary-color: blue;
   --border-color: #e8e8e8;
   margin: 0;
+  overflow: hidden;
   font-family: Avenir;
   font-size: 14px;
 }
 
-.ax_left .ax_options, .ax_left_container > *, .ax_left_container {
+.ax_right .rollout, .ax_right header, .ax_left .ax_options, .ax_left_container > *, .ax_left_container {
   transition: all 0.3s ease-out;
 }
 
@@ -20,6 +21,9 @@ body {
 
 .ax_header {
   display: grid;
+  position: relative;
+  z-index: 6;
+  background-color: white;
   grid-template-rows: 10vh;
   grid-template-columns: repeat(4, 1fr);
   border-bottom: solid 1px var(--border-color);
@@ -92,6 +96,63 @@ body {
   display: block;
   height: 36vh;
   object-fit: cover;
+}
+.ax_right {
+  background-color: #e8e8e8;
+  position: relative;
+}
+.ax_right section {
+  box-sizing: border-box;
+  padding: 2.5rem 1.5rem;
+  box-sizing: border-box;
+  height: 90vh;
+}
+.ax_right .scrollable {
+  overflow-y: scroll;
+}
+.ax_right header {
+  position: sticky;
+  padding: 0.5rem 1.5rem;
+  transform: translateY(-100%);
+  background-color: white;
+  border-bottom: solid 1px var(--border-color);
+  top: 0;
+  z-index: 5;
+  transition-delay: 0.5s;
+}
+.ax_right .rollout {
+  inset: 0;
+  transform: translateX(100%);
+  position: absolute;
+  background: white;
+  z-index: 4;
+}
+.ax_right .product-grid {
+  display: grid;
+  grid-gap: 3vmin 0;
+  align-items: center;
+  justify-items: center;
+  grid-template-columns: repeat(2, 50%);
+}
+.ax_right .product-grid > figure {
+  margin: 0;
+  width: 250px;
+  height: 45vh;
+  box-sizing: border-box;
+  overflow: hidden;
+  border: solid 1px var(--border-color);
+}
+.ax_right .product-grid > figure:nth-child(2n) {
+  transform: translateY(25%);
+}
+.ax_right .product-grid > figure img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.ax_right.preview .rollout,
+.ax_right.preview header {
+  transform: translate(0, 0);
 }
 
 /*# sourceMappingURL=product-gallery.css.map */

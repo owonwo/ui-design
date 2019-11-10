@@ -9,15 +9,16 @@ Element.prototype.setStyle = function setStyle(props) {
 }
 
 const doStuff = () => {
-    const leftSide = $('.ax_left');
-    const { width, height } = leftSide.getBoundingClientRect();
+    const leftPane = $('.ax_left');
+    const rightPane = $('.ax_right');
+    const { width, height } = leftPane.getBoundingClientRect();
 
-    leftSide.addEventListener('click', () => {
-        const figure = leftSide.querySelector('.ax_product_image');
-        toggleClass('preview', leftSide);
-        
-        console.log(height);
-        if (leftSide.classList.contains('preview')) {
+    leftPane.addEventListener('click', () => {
+        const figure = leftPane.querySelector('.ax_product_image');
+        toggleClass('preview', leftPane);
+        toggleClass('preview', rightPane);
+
+        if (leftPane.classList.contains('preview')) {
             figure.setStyle({ width: width+'px', height: height+'px' })
         } else {
             figure.setStyle({ width: (width * .6)+'px' , height: (height * .4)+'px' })
