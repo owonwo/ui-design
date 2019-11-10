@@ -1,27 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>UI Design | Alexis Shop by Wigxel</title>
     <link rel="stylesheet" href="css/product-gallery.css" />
-</head>
-<body>
+    <script src="js/product-gallery.js"></script>
+  </head>
+  <body>
     <header class="ax_header">
-        <section>BRAND</section>
-        <section>CONTACT</section>
-        <section>SIGN IN </section>
-        <section>MY BAG</section>
+      <section>BRAND</section>
+      <section>CONTACT</section>
+      <section>SIGN IN</section>
+      <section>MY BAG</section>
     </header>
-    
+
     <main class="ax_main">
-        <section id="ax_left">
-            SECTION ONE
+      <section class="ax_left">
+        <div class="ax_left_container">
+          <img
+            class="ax_product_image"
+            src="./assets/images/android-watch.jpeg"
+            alt="Android watch"
+          />
+          <!-- <img class="ax_product_image" alt="Android watch" /> -->
+          <h1 class="heading">Color the Wigxel.</h1>
+          <p class="paragraph">
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Rerum
+            facere nemo commodi ex voluptatibus minus at, iste, quos temporibus
+            dolor tempore saepe accusamus dolorem rem, enim alias. Quod, dolorum
+            pariatur.
+          </p>
+        </div>
+        <section class="ax_options">
+          <button>FILTERS</button>
         </section>
-        <section id="ax_right">
-            SECTION TWO
-        </section>
+      </section>
+      <section class="ax_right">
+        SECTION TWO
+      </section>
     </main>
-</body>
+  </body>
 </html>
