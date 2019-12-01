@@ -44,4 +44,39 @@ const doStuff = () => {
   console.log({ width, height });
 };
 
-window.addEventListener('load', doStuff)
+const clickEvent = (elms, activeClass = "is-active") => fn => {
+  const navLinks = elms;
+  navLinks.forEach(el =>
+    el.addEventListener("click", evt => {
+      navLinks.forEach(e => e.classList.remove(activeClass));
+      el.classList.add(activeClass);
+      fn(el);
+    })
+  );
+};
+
+const showMenu = () => {
+  const buttons = $$('[data-toggle=menu]');
+  
+  const toggleMenu = () => {
+    const zUpper = $('.z-upper')
+    const menuArea = $('.ax_menu_area');
+
+    zUpper.classList.toggle('expand');
+    menuArea.classList.toggle('expand')
+  }
+
+  [...buttons].map(e => e.addEventListener('click', toggleMenu));
+  // buttons[0].click();
+  
+  clickEvent(
+    $$(".fancy-menu li"),
+    "active"
+  )(function(current) {
+    console.log(current);
+  });
+}
+window.addEventListener('load', () => {
+  doStuff()
+  showMenu()
+})

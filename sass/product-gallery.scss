@@ -1,7 +1,8 @@
 $navbar-height: 10vh;
 
 body {
-  --primary-color: blue;
+  --primary-color: rgb(19, 19, 192);
+  --darker: rgb(32, 32, 133);
   --border-color: #e8e8e8;
 
   margin: 0;
@@ -32,6 +33,79 @@ body {
 %wireframe {
   > *:not(:last-child) {
     border-right: solid 1px var(--border-color);
+  }
+}
+
+.ax_menu_area {
+  @extend %transition-2;
+  transition-duration: 0.4s;
+
+  height: calc(100vh - 10vmin);
+  pointer-events: none;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 10;
+  opacity: 0;
+  width: 100vw;
+  background-color: var(--darker);
+  display: flex;
+
+  > section {
+    flex: 1;
+    padding: 10vmin 2vmin;
+    border: solid 1px white;
+  }
+
+  &.expand {
+    pointer-events: all;
+
+    &, .fancy-menu {
+      opacity: 1;
+    }
+
+    .fancy-menu {
+      transform: translateX(0);
+    }
+  }
+}
+
+.fancy-menu {
+  @extend %transition-1;
+  transform: translateX(-5%);
+  opacity: 0;
+  transition-delay: .4s;
+
+  li {
+    display: flex;
+    font-size: 2rem;
+    padding: 1rem 0;
+    color: rgba(255, 255, 255, 0.75);
+    align-items: center;
+    cursor: pointer;
+
+    &:before {
+      @extend %transition-1;
+
+      display: block;
+      content: "";
+      width: 0;
+      margin-right: 1rem;
+      border-top: solid 1px white;
+      position: relative;
+    }
+
+    &:hover {
+      color: rgba(255, 255, 255, 1);
+    }
+
+    &.active {
+      color: white;
+
+      &::before {
+        width: 50px;
+      }
+    }
   }
 }
 
@@ -155,8 +229,8 @@ body {
     }
 
     .scrollable {
-    //   @extend %outline;
-    
+      //   @extend %outline;
+
       overflow-y: scroll;
       overflow-x: hidden;
       width: calc(100% + 15px);
@@ -252,22 +326,132 @@ body {
   }
 }
 
+.z-upper {
+  @extend %transition-2;
+
+  height: 10vh;
+  position: absolute;
+  z-index: 2;
+  // display: none;
+  top: 0;
+  left: 0;
+  right: calc(100% - 10vmin);
+  background-color: var(--primary-color);
+  transition-duration: 0.4s;
+
+  > div {
+    display: flex;
+    width: 100vw;
+    height: 10vmin;
+    position: relative;
+    align-items: center;
+  }
+
+  input {
+    @extend %transition-1;
+    transition-delay: 0.3s;
+
+    flex-grow: 0;
+    margin: 0;
+    height: 10vmin;
+    border: none;
+    font-size: 1rem;
+    background: transparent;
+    caret-color: white;
+    color: white;
+    font-family: var(--heading-font);
+    padding: 0;
+    opacity: 0;
+    transform: translateX(10%);
+    box-sizing: border-box;
+    text-align: left;
+    flex-basis: calc(50vw - 10vmin);
+
+    &::placeholder {
+      color: white;
+      opacity: 1;
+    }
+  }
+
+  &.expand {
+    right: 0;
+
+    input,
+    .close-button {
+      opacity: 1;
+      transform: translateX(0%);
+    }
+  }
+}
+
+.menu-button {
+  width: 10vmin;
+  height: 10vmin;
+  background-color: var(--primary-color);
+  align-self: stretch;
+  border: none;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  display: flex;
+  z-index: 3;
+
+  &::before {
+    position: relative;
+    display: block;
+    content: "";
+    width: 3.5vmin;
+    border-radius: 50%;
+    border: solid 2px white;
+    height: 3.5vmin;
+  }
+
+  + * {
+    flex: 1;
+    font-size: 1.5rem;
+    color: #111;
+    text-align: center;
+  }
+}
+
+.close-button {
+  width: 4vmin;
+  height: 4vmin;
+  border-radius: 50%;
+  appearance: none;
+  opacity: 0;
+  background-color: transparent;
+  border: solid 2px white;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  right: 1rem;
+  text-align: center;
+
+  &::after,
+  &::before {
+    content: "";
+    width: 2px;
+    height: 2vmin;
+    background-color: white;
+    color: white;
+    display: block;
+    transform: translateX(-1px) rotate(45deg);
+  }
+
+  &::before {
+    transform: translateX(1px) rotate(-45deg);
+  }
+}
+
 .brand {
   display: flex;
-  align-items: center;
+  padding-left: 10vh;
 
-  .menu-button {
-    width: 10vmin;
-    background-color: var(--primary-color);
-    align-self: stretch;
-    border: none;
-    margin-right: 1rem;
-    + * {
-      flex: 1;
-      font-size: 1.5rem;
-      color: #111;
-      text-align: center;
-    }
+  span {
+    font-family: "PT Sans";
+    font-size: 2rem;
   }
 }
 

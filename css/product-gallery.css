@@ -1,5 +1,6 @@
 body {
-  --primary-color: blue;
+  --primary-color: rgb(19, 19, 192);
+  --darker: rgb(32, 32, 133);
   --border-color: #e8e8e8;
   margin: 0;
   overflow: hidden;
@@ -11,16 +12,75 @@ body {
   color: var(--primary-color);
 }
 
-.ax_right .product-grid > figure > div, .ax_right .rollout, .ax_right header, .ax_left .ax_options, .ax_left_container > *, .ax_left_container {
+.z-upper input, .ax_right .product-grid > figure > div, .ax_right .rollout, .ax_right header, .ax_left .ax_options, .ax_left_container > *, .ax_left_container, .fancy-menu li:before, .fancy-menu {
   transition: all 0.6s cubic-bezier(0.17, 0.84, 0.44, 1);
 }
 
-.ax_product_image {
+.z-upper, .ax_product_image, .ax_menu_area {
   transition: all 0.7s cubic-bezier(0.52, 0.63, 0.26, 1);
 }
 
 .ax_main > *:not(:last-child), .ax_header > *:not(:last-child) {
   border-right: solid 1px var(--border-color);
+}
+
+.ax_menu_area {
+  transition-duration: 0.4s;
+  height: calc(100vh - 10vmin);
+  pointer-events: none;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 10;
+  opacity: 0;
+  width: 100vw;
+  background-color: var(--darker);
+  display: flex;
+}
+.ax_menu_area > section {
+  flex: 1;
+  padding: 10vmin 2vmin;
+  border: solid 1px white;
+}
+.ax_menu_area.expand {
+  pointer-events: all;
+}
+.ax_menu_area.expand, .ax_menu_area.expand .fancy-menu {
+  opacity: 1;
+}
+.ax_menu_area.expand .fancy-menu {
+  transform: translateX(0);
+}
+
+.fancy-menu {
+  transform: translateX(-5%);
+  opacity: 0;
+  transition-delay: 0.4s;
+}
+.fancy-menu li {
+  display: flex;
+  font-size: 2rem;
+  padding: 1rem 0;
+  color: rgba(255, 255, 255, 0.75);
+  align-items: center;
+  cursor: pointer;
+}
+.fancy-menu li:before {
+  display: block;
+  content: "";
+  width: 0;
+  margin-right: 1rem;
+  border-top: solid 1px white;
+  position: relative;
+}
+.fancy-menu li:hover {
+  color: white;
+}
+.fancy-menu li.active {
+  color: white;
+}
+.fancy-menu li.active::before {
+  width: 50px;
 }
 
 .ax_header {
@@ -184,22 +244,117 @@ body {
   transform: translate(0, 0);
 }
 
-.brand {
+.z-upper {
+  height: 10vh;
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  right: calc(100% - 10vmin);
+  background-color: var(--primary-color);
+  transition-duration: 0.4s;
+}
+.z-upper > div {
   display: flex;
+  width: 100vw;
+  height: 10vmin;
+  position: relative;
   align-items: center;
 }
-.brand .menu-button {
+.z-upper input {
+  transition-delay: 0.3s;
+  flex-grow: 0;
+  margin: 0;
+  height: 10vmin;
+  border: none;
+  font-size: 1rem;
+  background: transparent;
+  caret-color: white;
+  color: white;
+  font-family: var(--heading-font);
+  padding: 0;
+  opacity: 0;
+  transform: translateX(10%);
+  box-sizing: border-box;
+  text-align: left;
+  flex-basis: calc(50vw - 10vmin);
+}
+.z-upper input::placeholder {
+  color: white;
+  opacity: 1;
+}
+.z-upper.expand {
+  right: 0;
+}
+.z-upper.expand input,
+.z-upper.expand .close-button {
+  opacity: 1;
+  transform: translateX(0%);
+}
+
+.menu-button {
   width: 10vmin;
+  height: 10vmin;
   background-color: var(--primary-color);
   align-self: stretch;
   border: none;
-  margin-right: 1rem;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  display: flex;
+  z-index: 3;
 }
-.brand .menu-button + * {
+.menu-button::before {
+  position: relative;
+  display: block;
+  content: "";
+  width: 3.5vmin;
+  border-radius: 50%;
+  border: solid 2px white;
+  height: 3.5vmin;
+}
+.menu-button + * {
   flex: 1;
   font-size: 1.5rem;
   color: #111;
   text-align: center;
+}
+
+.close-button {
+  width: 4vmin;
+  height: 4vmin;
+  border-radius: 50%;
+  appearance: none;
+  opacity: 0;
+  background-color: transparent;
+  border: solid 2px white;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  right: 1rem;
+  text-align: center;
+}
+.close-button::after, .close-button::before {
+  content: "";
+  width: 2px;
+  height: 2vmin;
+  background-color: white;
+  color: white;
+  display: block;
+  transform: translateX(-1px) rotate(45deg);
+}
+.close-button::before {
+  transform: translateX(1px) rotate(-45deg);
+}
+
+.brand {
+  display: flex;
+  padding-left: 10vh;
+}
+.brand span {
+  font-family: "PT Sans";
+  font-size: 2rem;
 }
 
 .text-sm {
