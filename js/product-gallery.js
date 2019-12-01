@@ -44,39 +44,86 @@ const doStuff = () => {
   console.log({ width, height });
 };
 
-const clickEvent = (elms, activeClass = "is-active") => fn => {
+const fnX = (state, ii, { activeClass }) => {
+  if (state) {
+    ii.classList.add(activeClass)
+  } else {
+    ii.classList.remove(activeClass);
+  }
+}
+
+const clickEvent = (elms, activeClass = "is-active", functor = fnX ) => fn => {
   const navLinks = elms;
-  navLinks.forEach(el =>
+  const meta = { activeClass, index: 0, event: new CustomEvent('laugh'), lastIndex: 0 };
+  
+  const getLastActive = next => (c, i) => {
+    if (c.classList.contains(activeClass))
+      meta.lastIndex = i;
+
+    next(c, i)
+  }
+
+  navLinks.forEach((el, index) =>
     el.addEventListener("click", evt => {
-      navLinks.forEach(e => e.classList.remove(activeClass));
-      el.classList.add(activeClass);
-      fn(el);
+      meta.event = evt;
+      meta.index = index;
+
+      // remove active from other
+      navLinks.forEach(getLastActive((others) => {
+        functor(false, others, meta)
+      }));
+
+      // add active
+      functor(true, el, meta);
+      fn(el, meta);
     })
   );
+  return index => navLinks[index].click(); 
 };
 
 const showMenu = () => {
   const buttons = $$('[data-toggle=menu]');
-  
+  const navigations = $$(".fancy-menu li");
   const toggleMenu = () => {
     const zUpper = $('.z-upper')
     const menuArea = $('.ax_menu_area');
 
     zUpper.classList.toggle('expand');
     menuArea.classList.toggle('expand')
+
+    // click the first one when not active
+    console.log($(".fancy-menu li.active"));
+    if (!$('.fancy-menu li.active')) 
+      navigations[0].click();
   }
 
   [...buttons].map(e => e.addEventListener('click', toggleMenu));
-  // buttons[0].click();
+  buttons[0].click();
   
   clickEvent(
-    $$(".fancy-menu li"),
+    navigations,
     "active"
-  )(function(current) {
-    console.log(current);
-  });
+  )((current, { index }) => slideNow(index));
 }
+
 window.addEventListener('load', () => {
   doStuff()
   showMenu()
+  // animates the slide in the menu 
+  const handleChange = (state, el, { lastIndex, index, activeClass }) => {
+    if (index === 0) {
+      el.classList.add(activeClass)
+    } else if (lastIndex > index) {
+      el.classList.remove(activeClass);
+    }
+  }
+
+  window.slideNow = clickEvent(
+    $$(".ax_menu_area .slide-item"), 
+    'reveal',
+    handleChange
+  )((current, { index }) => {
+    // console.log(current, index);
+    // e.classList.add("reveal");
+  });
 })

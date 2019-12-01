@@ -1,8 +1,8 @@
 $navbar-height: 10vh;
 
 body {
-  --primary-color: rgb(19, 19, 192);
-  --darker: rgb(32, 32, 133);
+  --primary-color: #100eaf;
+  --darker: #111154;
   --border-color: #e8e8e8;
 
   margin: 0;
@@ -53,27 +53,101 @@ body {
 
   > section {
     flex: 1;
-    padding: 10vmin 2vmin;
-    border: solid 1px white;
+    position: relative;
+    padding: 4vmin 2vmin;
+    
+    &:first-child {
+      flex-grow: 0;
+      min-width: calc(100vw / 5);
+    }
+
+    &:last-child {
+      padding: 0;
+      flex-grow: 0;
+      flex-basis: calc(100vw / 3);
+      background-color: white;
+    }
   }
 
   &.expand {
     pointer-events: all;
+    opacity: 1;
 
-    &, .fancy-menu {
-      opacity: 1;
-    }
-
-    .fancy-menu {
-      transform: translateX(0);
+    .fancy-menu, .shop-cat {
+      @extend %menu-fade-show;
     }
   }
 }
 
-.fancy-menu {
-  @extend %transition-1;
-  transform: translateX(-5%);
+%menu-fade-hide {
   opacity: 0;
+  transform: translateX(-5%);
+}
+
+%menu-fade-show {
+  opacity: 1;
+  transform: translateX(0%);
+}
+
+.ax_menu_area .slider {
+  flex: 1;
+  width: 100%;
+  background-color: blue;
+
+  .slide-item {
+    @extend %transition-2;
+    
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 0px;
+    display: flex;
+    flex-flow: column;
+    overflow: hidden;
+    will-change: all;
+    z-index: 5;
+    
+    > .slide-content {
+      width: calc(100vw / 3);
+      display: flex;
+      position: relative;
+      flex: 1;
+    }
+    
+    &.reveal {
+      width: 100%;
+
+      img  {
+        transform: scale(1);
+      }
+    }
+
+    img {
+      @extend %transition-1;
+
+      width: 100%;
+      flex-grow: 1;
+      object-fit: cover;
+      transform: scale(1.2);
+    }
+
+    article {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      font-size: larger;
+      box-sizing: border-box;
+      padding: 5vmin;
+      color: white;
+      text-shadow: 0 0 2px rgba(black, .15);
+    }
+
+  }
+}
+
+.fancy-menu {
+  @extend %menu-fade-hide;
+  @extend %transition-2;
   transition-delay: .4s;
 
   li {
@@ -107,6 +181,26 @@ body {
       }
     }
   }
+}
+
+.shop-cat {
+  @extend %menu-fade-hide;
+  @extend %transition-1;
+  transition-delay: .6s;
+
+  color: white;
+  font-size: 1rem;
+
+  li {
+    display: flex;
+    line-height: 4;
+  }
+}
+
+.heading {
+  font-family: Didot;
+  font-size: 2rem;
+  opacity: 1;
 }
 
 .ax_ {
@@ -162,12 +256,6 @@ body {
         &:not(img) {
           transition-duration: 0.1s;
         }
-      }
-
-      .heading {
-        font-family: Didot;
-        font-size: 2rem;
-        opacity: 1;
       }
 
       .paragraph {
