@@ -55,7 +55,7 @@ body {
     flex: 1;
     position: relative;
     padding: 4vmin 2vmin;
-    
+
     &:first-child {
       flex-grow: 0;
       min-width: calc(100vw / 5);
@@ -73,7 +73,8 @@ body {
     pointer-events: all;
     opacity: 1;
 
-    .fancy-menu, .shop-cat {
+    .fancy-menu,
+    .shop-cat {
       @extend %menu-fade-show;
     }
   }
@@ -96,7 +97,7 @@ body {
 
   .slide-item {
     @extend %transition-2;
-    
+
     position: absolute;
     top: 0;
     bottom: 0;
@@ -106,18 +107,18 @@ body {
     overflow: hidden;
     will-change: all;
     z-index: 5;
-    
+
     > .slide-content {
       width: calc(100vw / 3);
       display: flex;
       position: relative;
       flex: 1;
     }
-    
+
     &.reveal {
       width: 100%;
 
-      img  {
+      img {
         transform: scale(1);
       }
     }
@@ -139,16 +140,15 @@ body {
       box-sizing: border-box;
       padding: 5vmin;
       color: white;
-      text-shadow: 0 0 2px rgba(black, .15);
+      text-shadow: 0 0 2px rgba(black, 0.15);
     }
-
   }
 }
 
 .fancy-menu {
   @extend %menu-fade-hide;
   @extend %transition-2;
-  transition-delay: .4s;
+  transition-delay: 0.4s;
 
   li {
     display: flex;
@@ -186,7 +186,7 @@ body {
 .shop-cat {
   @extend %menu-fade-hide;
   @extend %transition-1;
-  transition-delay: .6s;
+  transition-delay: 0.6s;
 
   color: white;
   font-size: 1rem;
@@ -299,6 +299,7 @@ body {
   &product_image {
     @extend %transition-2;
 
+    cursor: pointer;
     min-height: 200px;
     background-color: whitesmoke;
     display: block;

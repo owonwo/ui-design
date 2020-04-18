@@ -61,7 +61,8 @@ body {
   transform: translateX(-5%);
 }
 
-.ax_menu_area.expand .fancy-menu, .ax_menu_area.expand .shop-cat {
+.ax_menu_area.expand .fancy-menu,
+.ax_menu_area.expand .shop-cat {
   opacity: 1;
   transform: translateX(0%);
 }
@@ -224,6 +225,7 @@ body {
   opacity: 0;
 }
 .ax_product_image {
+  cursor: pointer;
   min-height: 200px;
   background-color: whitesmoke;
   display: block;
